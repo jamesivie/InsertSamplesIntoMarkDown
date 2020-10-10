@@ -5,9 +5,9 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Version>666.666.666</Version>
     <Authors>James Ivie</Authors>
-    <Product>AmbientServices</Product>
+    <Product>InsertSamplesIntoMarkDown</Product>
     <Copyright>2020</Copyright>
-    <Description>An MIT-licensed utility program that Inserts or updates specially-marked-up sample code from a csharp file into a markdown readme file.</Description>
+    <Description>An MIT-licensed utility program that inserts or updates specially marked-up sample code from a csharp file into a markdown readme file.</Description>
     <PackageProjectUrl>https://github.com/jamesivie/InsertSamplesIntoMarkDown</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jamesivie/InsertSamplesIntoMarkDown</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

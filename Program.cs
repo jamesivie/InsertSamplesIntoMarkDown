@@ -12,9 +12,9 @@ namespace InsertSamplesIntoMarkDown
             string sourceFile = (args.Length > 1 ? args[1] : "Samples.cs");
             string targetFile = (args.Length > 2 ? args[2] : "README.md");
             Console.WriteLine($"Updating {targetFile} from {sourceFile}...");
-            string assemblyDirectory = AssemblyDirectory;
-            string sourceFileFullPath = Path.Combine(assemblyDirectory, sourceFile);
-            string targetFileFullPath = Path.Combine(assemblyDirectory, targetFile);
+            string baseFolder = Directory.GetCurrentDirectory();
+            string sourceFileFullPath = Path.Combine(baseFolder, sourceFile);
+            string targetFileFullPath = Path.Combine(baseFolder, targetFile);
             string sourceFileContents = File.ReadAllText(sourceFileFullPath);
             MatchCollection rawRegions = RegionsRegex.Matches(sourceFileContents);
             string targetFileContents = File.ReadAllText(targetFileFullPath);
@@ -29,17 +29,6 @@ namespace InsertSamplesIntoMarkDown
             targetFileContents = targetFileContents.TrimEnd();
             File.WriteAllText(targetFileFullPath, targetFileContents);
             Console.WriteLine($"Updated {targetFile} from {sourceFile}!");
-        }
-
-        static string AssemblyDirectory
-        {
-            get
-            {
-                string codeBase = typeof(Program).Assembly.CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
-                string path = Uri.UnescapeDataString(uri.Path);
-                return Path.GetDirectoryName(path);
-            }
         }
     }
 }
