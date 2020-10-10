@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/InsertSamplesIntoMarkDown/v16
+/bin
+/obj
+/Properties/PublishProfiles
+/InsertSamplesIntoMarkDown.csproj.user
