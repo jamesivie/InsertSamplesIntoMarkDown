@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -15,20 +16,40 @@ namespace InsertSamplesIntoMarkDown
             string baseFolder = Directory.GetCurrentDirectory();
             string sourceFileFullPath = Path.Combine(baseFolder, sourceFile);
             string targetFileFullPath = Path.Combine(baseFolder, targetFile);
-            string sourceFileContents = File.ReadAllText(sourceFileFullPath);
-            MatchCollection rawRegions = RegionsRegex.Matches(sourceFileContents);
-            string targetFileContents = File.ReadAllText(targetFileFullPath);
-            foreach (Match match in rawRegions)
+            for (int attempt = 0; attempt < 5; ++attempt)
             {
-                string regionName = match.Groups[2].Value;
-                string regionContents = match.Groups[3].Value.Trim();
-                string targetInsert = $"[//]: # ({regionName})\r\n```csharp\r\n{regionContents}\r\n```";
-                string targetReplacePattern = @"\[\/\/\]\:\s*\#\s*\(" + regionName + @"\).*[\r\n]```[^\r\n]*(.|\r|\n)+?(?=```)```";
-                targetFileContents = Regex.Replace(targetFileContents, targetReplacePattern, targetInsert);
+                try
+                {
+                    string sourceFileContents = File.ReadAllText(sourceFileFullPath);
+                    MatchCollection rawRegions = RegionsRegex.Matches(sourceFileContents);
+                    string targetFileContents = File.ReadAllText(targetFileFullPath);
+                    foreach (Match match in rawRegions)
+                    {
+                        string regionName = match.Groups[2].Value;
+                        string regionContents = match.Groups[3].Value.Trim();
+                        string targetInsert = $"[//]: # ({regionName})\r\n```csharp\r\n{regionContents}\r\n```";
+                        string targetReplacePattern = @"\[\/\/\]\:\s*\#\s*\(" + regionName + @"\).*[\r\n]```[^\r\n]*(.|\r|\n)+?(?=```)```";
+                        targetFileContents = Regex.Replace(targetFileContents, targetReplacePattern, targetInsert);
+                    }
+                    targetFileContents = targetFileContents.TrimEnd();
+                    File.WriteAllText(targetFileFullPath, targetFileContents);
+                    Console.WriteLine($"Updated {targetFile} from {sourceFile}!");
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error updating {targetFile} from {sourceFile}: {ex.Message}\r\nRetrying in a bit...");
+                    System.Threading.Thread.Sleep(250 + (int)(GetRandom() % 250));
+                    // fall through and retry
+                }
             }
-            targetFileContents = targetFileContents.TrimEnd();
-            File.WriteAllText(targetFileFullPath, targetFileContents);
-            Console.WriteLine($"Updated {targetFile} from {sourceFile}!");
+        }
+        private static readonly long _startTickCount = Environment.TickCount;
+        private static readonly Stopwatch _stopwatch = Stopwatch.StartNew();  // use this stopwatch to get seeds whose numbers change much faster than the tick count (which is generally every 15ms)
+        private static long _rotator;      // interlocked
+        static ulong GetRandom()
+        {
+            return (ulong)((_startTickCount + _stopwatch.ElapsedTicks) ^ System.Threading.Interlocked.Increment(ref _rotator));   // note that, yes, the stopwatch ticks are in different units than the environment ticks they're being added to, but we don't care about that here
         }
     }
 }
