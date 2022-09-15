@@ -16,6 +16,8 @@
     <PackAsTool>True</PackAsTool>
     <ToolCommandName>InsertSamplesIntoMarkDown</ToolCommandName>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<DebugType>embedded</DebugType>
+	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
   </PropertyGroup>
 
 </Project>
