@@ -27,8 +27,8 @@ InsertSamplesIntoMarkDown is written and maintained by James Ivie as a utility f
 InsertSamplesIntoMarkDown is licensed under [MIT](https://opensource.org/licenses/MIT).
 
 ## Language and Tools
-InsertSamplesIntoMarkDown is written in C#, using .NET Core 2.1.
+InsertSamplesIntoMarkDown is written in C#, using .NET Core 3.1, .NET 5.0, and .NET 6.0.
 
-The code can be built using either Microsoft Visual Studio 2017+, Microsoft Visual Studio Code, or .NET Core command-line utilities.
+The code can be built using either Microsoft Visual Studio 2022+, Microsoft Visual Studio Code, or .NET Core command-line utilities.
 
 Binaries are available at https://www.nuget.org/packages/InsertSamplesIntoMarkDown

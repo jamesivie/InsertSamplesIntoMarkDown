@@ -13,6 +13,9 @@
     <PackageProjectUrl>https://github.com/jamesivie/InsertSamplesIntoMarkDown</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jamesivie/InsertSamplesIntoMarkDown</RepositoryUrl>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <PackAsTool>True</PackAsTool>
+    <ToolCommandName>InsertSamplesIntoMarkDown</ToolCommandName>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>
