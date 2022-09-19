@@ -1,29 +1,32 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace InsertSamplesIntoMarkDown
 {
     class Program
     {
-        private static Regex RegionsRegex = new Regex(@"(\s*#region\s+)([^\r\n]+)((.|\r|\n)+?(?=#endregion))", RegexOptions.Compiled);
+        private static readonly Regex RegionsRegex = new Regex(@"(\s*#region\s+)([^\r\n]+)((.|\r|\n)+?(?=#endregion))", RegexOptions.Compiled);
         static void Main(string[] args)
         {
             string sourceFile = (args.Length > 1 ? args[1] : "Samples.cs");
             string targetFile = (args.Length > 2 ? args[2] : "README.md");
+            string timeout  = (args.Length > 4 ? args[4] : "");
+            int timeoutSeconds = string.IsNullOrEmpty(timeout) ? 30 : int.Parse(timeout);
             Console.WriteLine($"Updating {targetFile} from {sourceFile}...");
             string baseFolder = Directory.GetCurrentDirectory();
             string sourceFileFullPath = Path.Combine(baseFolder, sourceFile);
             string targetFileFullPath = Path.Combine(baseFolder, targetFile);
-            for (int attempt = 0; attempt < 5; ++attempt)
+            for (DateTime startTime = DateTime.UtcNow; (DateTime.UtcNow - startTime) < TimeSpan.FromSeconds(timeoutSeconds); )
             {
                 try
                 {
                     string sourceFileContents = File.ReadAllText(sourceFileFullPath);
                     MatchCollection rawRegions = RegionsRegex.Matches(sourceFileContents);
                     string targetFileContents = File.ReadAllText(targetFileFullPath);
-                    foreach (Match match in rawRegions)
+                    foreach (Match match in rawRegions.Cast<Match>())
                     {
                         string regionName = match.Groups[2].Value;
                         string regionContents = match.Groups[3].Value.Trim();
